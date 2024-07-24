@@ -77,6 +77,7 @@ class MarioController(MarioEnvironment):
         # Simply toggles the buttons being on or off for a duration of act_freq
         for action in actions:
             self.pyboy.send_input(self.valid_actions[action[0]])
+            self.pyboy.tick()
 
         #for _ in range(self.act_freq):
 
@@ -93,7 +94,6 @@ class MarioController(MarioEnvironment):
                     print("End Action", action)
                     self.pyboy.send_input(self.release_button[action[0]])
                     actions.remove(action)
-
 
 class MarioExpert:
     """
@@ -163,14 +163,14 @@ class MarioExpert:
                                     enemies.append([value, x_val, y_val, distance])
 
                                 else:
-                                    if distance < closest_vec_obj:
+                                    if x_val - mario_pos[0] < 0:
+                                        distance = distance * -1
+
+                                    if 0 < distance < closest_vec_obj:
                                         closest_vec_obj = distance
                                         print("Closest obj vec:", distance)
                                         closest_obj = len(que)
                                         print("Closest Distance:", closest_obj)
-
-                                    if x_val - mario_pos[0] < 0:
-                                        distance = distance * -1
 
                                     que.append([value, x_val, y_val, distance])
 
@@ -190,55 +190,97 @@ class MarioExpert:
             break
 
         if len(enemies) > 0:
-            if enemies[closest_enemy][0] == 15 or enemies[closest_enemy][0] == 16 or enemies[closest_enemy][0] == 18:
-                print(game_area[len(game_area) - mario_pos[1]])
-                if 3 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10:
+            if enemies[closest_enemy][0] == 15:
+                if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10 or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1]:
                     print("Attack")
-                    actions.append([2, 2])
-                    actions.append([4, 7])
-                elif enemies[closest_enemy][3] < 4 and enemies[closest_enemy][2] > mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1]:
+                    actions.append([2, 6])
+                    actions.append([5, 6])
+                    actions.append([4, 2])
+                elif enemies[closest_enemy][3] < 3 and enemies[closest_enemy][2] > mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][1] == mario_pos[0] + 1:
                     print("Run Away")
                     actions.append([1, 10])
                     actions.append([5, 10])
-                elif enemies[closest_enemy][1] < mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1]:
-                    print("On Top")
-                    actions.append([1, 1])
+                elif enemies[closest_enemy][1] < mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][3] < 3:
+                    print("Left On Top")
+                    actions.append([1, 3])
+                    actions.append([5, 3])
 
-                elif enemies[closest_enemy][1] > mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1]:
-                    print("On Top")
-                    actions.append([2, 1])
+                elif enemies[closest_enemy][1] > mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][3] < 3:
+                    print("Right On Top")
+                    actions.append([2, 3])
+                    actions.append([5, 3])
 
-        if len(actions) == 0:
+            if enemies[closest_enemy][0] == 16:
+                if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10:
+                    print("Attack")
+                    actions.append([2, 6])
+                    actions.append([5, 6])
+                    actions.append([4, 4])
+                elif enemies[closest_enemy][3] < 3 and enemies[closest_enemy][2] > mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][1] == mario_pos[0] + 1:
+                    print("Run Away")
+                    actions.append([1, 10])
+                    actions.append([5, 10])
+                elif enemies[closest_enemy][1] < mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][3] < 3:
+                    print("Left On Top")
+                    actions.append([1, 3])
+                    actions.append([5, 3])
+
+                elif enemies[closest_enemy][1] > mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][3] < 3:
+                    print("Right On Top")
+                    actions.append([2, 3])
+                    actions.append([5, 3])
+
+            if enemies[closest_enemy][0] == 18:
+                if 3 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and \
+                        game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10:
+                    print("Attack")
+                    actions.append([5, 6])
+                    actions.append([2, 6])
+                    actions.append([4, 10])
+                elif enemies[closest_enemy][3] < 5 and enemies[closest_enemy][2] > mario_pos[1] or \
+                        enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1] or \
+                        enemies[closest_enemy][3] < 2 and enemies[closest_enemy][1] == mario_pos[0] + 1:
+                    print("Run Away")
+                    actions.append([1, 10])
+                    actions.append([5, 10])
+                elif enemies[closest_enemy][1] < mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and \
+                        enemies[closest_enemy][3] < 3:
+                    print("Left On Top")
+                    actions.append([1, 3])
+                    actions.append([5, 3])
+
+                elif enemies[closest_enemy][1] > mario_pos[0] and enemies[closest_enemy][2] < mario_pos[1] and \
+                        enemies[closest_enemy][3] < 3:
+                    print("Right On Top")
+                    actions.append([2, 3])
+                    actions.append([5, 3])
+
+        if len(que) > 0 and len(actions) == 0:
             if que[closest_obj][0] == 14:
-                if que[closest_obj][3] < 2 and (que[closest_obj][1] - mario_pos[0]) >= 0:
-                    actions.append([1, 5])
-                elif que[closest_obj][3] == 2:
+                if que[closest_obj][3] < 3 and (que[closest_obj][1] - mario_pos[0]) >= 0:
+                    actions.append([1, 30])
+                elif que[closest_obj][3] == 3:
                     print("Jump")
-                    actions.append([4, 5])
-                    actions.append([2, 2])
-                else:
-                    actions.append([2, 1])
+                    actions.append([2, 8])
+                    actions.append([4, 13])
 
             elif que[closest_obj][0] == 10:
-                if que[closest_obj][3] < 2 and (que[closest_obj][1] - mario_pos[0]) >= 0:
-                    actions.append([1, 5])
-                elif que[closest_obj][3] == 2:
+                if que[closest_obj][3] < 3 and (que[closest_obj][1] - mario_pos[0]) >= 0:
+                    actions.append([1, 30])
+                elif que[closest_obj][3] == 3:
                     print("Jump")
-                    actions.append([4, 10])
-                    actions.append([2, 2])
-                else:
-                    actions.append([2, 1])
+                    actions.append([2, 8])
+                    actions.append([4, 13])
 
             elif que[closest_obj][0] == 0:
                 if que[closest_obj][3] < 2.5:
                     print("Jump")
-                    actions.append([4, 10])
-                    actions.append([2, 10])
-                else:
-                    actions.append([2, 1])
+                    actions.append([5, 4])
+                    actions.append([4, 15])
+                    actions.append([2, 15])
 
-            else:
-                actions.append([2, 1])
+        if len(actions) == 0:
+            actions.append([2, 1])
 
         # Implement your code here to choose the best action
         # time.sleep(0.1)
