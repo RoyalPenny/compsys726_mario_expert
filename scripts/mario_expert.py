@@ -31,7 +31,7 @@ class MarioController(MarioEnvironment):
     def __init__(
         self,
         act_freq: int = 1,
-        emulation_speed: int = 1000,
+        emulation_speed: int = 2,
         headless: bool = False,
     ) -> None:
         super().__init__(
@@ -82,7 +82,7 @@ class MarioController(MarioEnvironment):
         #for _ in range(self.act_freq):
 
         while len(actions) > 0:
-            input()
+#            input()
 
             self.pyboy.tick()
             print(tick)
@@ -140,6 +140,11 @@ class MarioExpert:
                 if x == 1:
 
                     mario_pos = [x_val + 1, y_val - 1]
+
+                    if mario_pos[0] == 17 or mario_pos[1] == 17:
+                        actions.append([2, 20])
+                        return actions
+
                     y_val = len(game_area)
 
                     for y in game_area:
@@ -191,7 +196,7 @@ class MarioExpert:
 
         if len(enemies) > 0:
             if enemies[closest_enemy][0] == 15:
-                if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 or game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 14 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1]:
+                if 4 > enemies[closest_enemy][3] > 1 and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 or game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 14 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1]:
                     print("Attack")
                     actions.append([2, 6])
                     actions.append([5, 6])
@@ -213,9 +218,9 @@ class MarioExpert:
             if enemies[closest_enemy][0] == 16:
                 if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10:
                     print("Attack")
-                    actions.append([2, 6])
                     actions.append([5, 6])
-                    actions.append([4, 4])
+                    actions.append([2, 6])
+                    actions.append([4, 6])
                 elif enemies[closest_enemy][3] < 3 and enemies[closest_enemy][2] > mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][1] == mario_pos[0] + 1:
                     print("Run Away")
                     actions.append([1, 10])
@@ -276,28 +281,31 @@ class MarioExpert:
                         actions.append([5, 3])
 
         if len(que) > 0 and len(actions) == 0:
-            if que[closest_obj][0] == 14:
-                if que[closest_obj][3] < 3 and (que[closest_obj][1] - mario_pos[0]) >= 0:
-                    actions.append([1, 30])
-                elif que[closest_obj][3] == 3:
+            for obj in que:
+                if obj[0] == 0 and 0 < obj[1] - mario_pos[0] < 2:
                     print("Jump")
-                    actions.append([2, 8])
-                    actions.append([4, 13])
-
-            elif que[closest_obj][0] == 10:
-                if que[closest_obj][3] < 3 and (que[closest_obj][1] - mario_pos[0]) >= 0:
-                    actions.append([1, 30])
-                elif que[closest_obj][3] == 3:
-                    print("Jump")
-                    actions.append([2, 8])
-                    actions.append([4, 13])
-
-            elif que[closest_obj][0] == 0:
-                if que[closest_obj][3] < 2.5:
-                    print("Jump")
-                    actions.append([5, 4])
-                    actions.append([4, 15])
+                    actions.append([5, 6])
                     actions.append([2, 15])
+                    actions.append([4, 15])
+
+            if len(actions) == 0:
+
+                if que[closest_obj][0] == 14:
+                    if que[closest_obj][3] < 3 and (que[closest_obj][1] - mario_pos[0]) >= 0:
+                        actions.append([1, 20])
+                    elif que[closest_obj][3] == 3:
+                        print("Jump")
+                        actions.append([2, 8])
+                        actions.append([4, 13])
+
+                elif que[closest_obj][0] == 10:
+                    if que[closest_obj][3] < 2 and (que[closest_obj][1] - mario_pos[0]) >= 0 and game_area[mario_pos[0] - 1][mario_pos[1] - 1] != 0 and game_area[mario_pos[0] + 1][mario_pos[1] - 2] == 10:
+                        print("Walk Back")
+                        actions.append([1, 20])
+                    elif que[closest_obj][3] < 3:
+                        print("Jump")
+                        actions.append([2, 8])
+                        actions.append([4, 13])
 
         if len(actions) == 0:
             actions.append([2, 1])
