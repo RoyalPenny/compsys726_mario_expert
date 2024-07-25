@@ -216,10 +216,15 @@ class MarioExpert:
                     actions.append([5, 2])
 
             if enemies[closest_enemy][0] == 16:
-                if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10:
-                    print("Attack")
+                if 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10 and enemies[closest_enemy][1] > mario_pos[0]:
+                    print("Attack Right")
                     actions.append([5, 6])
                     actions.append([2, 6])
+                    actions.append([4, 6])
+                elif 4 > enemies[closest_enemy][3] and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 10 and enemies[closest_enemy][1] < mario_pos[0]:
+                    print("Attack Left")
+                    actions.append([5, 6])
+                    actions.append([1, 6])
                     actions.append([4, 6])
                 elif enemies[closest_enemy][3] < 3 and enemies[closest_enemy][2] > mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][2] == mario_pos[1] or enemies[closest_enemy][3] < 2 and enemies[closest_enemy][1] == mario_pos[0] + 1:
                     print("Run Away")
