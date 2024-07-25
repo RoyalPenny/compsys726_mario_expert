@@ -196,8 +196,13 @@ class MarioExpert:
 
         if len(enemies) > 0:
             if enemies[closest_enemy][0] == 15:
-                if 4 > enemies[closest_enemy][3] > 1 and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 or game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 14 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1]:
-                    print("Attack")
+                if 4 > enemies[closest_enemy][3] > 1 and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and enemies[closest_enemy][1] > mario_pos[0] or game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][1] > mario_pos[0] or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 14 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][1] > mario_pos[0]:
+                    print("Attack Right")
+                    actions.append([2, 6])
+                    actions.append([5, 6])
+                    actions.append([4, 2])
+                if 4 > enemies[closest_enemy][3] > 1 and enemies[closest_enemy][2] == mario_pos[1] and game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and enemies[closest_enemy][1] < mario_pos[0] or game_area[len(game_area) - mario_pos[1]][mario_pos[0] - 1] == 10 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][1] < mario_pos[0] or game_area[len(game_area) - mario_pos[1]][mario_pos[0]] == 14 and 6 > enemies[closest_enemy][3] and enemies[closest_enemy][2] < mario_pos[1] and enemies[closest_enemy][1] < mario_pos[0]:
+                    print("Attack Left")
                     actions.append([2, 6])
                     actions.append([5, 6])
                     actions.append([4, 2])
